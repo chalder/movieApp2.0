@@ -26,6 +26,7 @@ const Home = () => {
         totalPages: 0
     });
     const [loading, setLoading] = useState(false);
+    const [searchText, setSearchText] = useState("");
 
     useEffect(() => {
         async function getMovieData() {
@@ -37,11 +38,10 @@ const Home = () => {
                 setState(prev => ({
                     ...prev,
                     movies: [...data.results],
-                    heroImage: prev.HeroImage || data.results[0],
+                    heroImage: prev.HeroImage || data.results[1],
                     currentPage: data.page,
                     totalPages: data.total_pages
                 }))
-                console.log(">>>>>>>>>>>>>backdrop_path", state.heroImage.backdrop_path)
             } catch (e) {
                 console.log(e)
             }
@@ -62,9 +62,22 @@ const Home = () => {
                 text={state.heroImage.overview}
             />
             <SearchBar />
-            <Grid />
-            <MovieThumb />
-            <Spinner />
+            <Grid header={searchText ? 'Search Result' : 'Popular Movies'}>
+                {
+                    state.movies.map(m => (
+                        <MovieThumb
+                            id={m.id}
+                            name={m.title}
+                            image={m.poster_path ?
+                                `${IMAGE_BASE_URL}${POSTER_SIZE}${m.poster_path}` : 'No Image'}
+                            movieId={m.id}
+                            movieName={m.original_title}>
+                            clickable
+                        </MovieThumb>
+                    ))
+
+                }
+            </Grid>
             <LoadMoreButton />
         </>
     )

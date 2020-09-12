@@ -1,5 +1,11 @@
 import React from 'react'
 
-const MovieThumb = () => <h3>MovieThumb Here</h3>
+const MovieThumb = ({ image, id, clickable }) => (
+    <div className="movie-thumb">
+        <img src={image} />
+    </div>
 
+)
 export default MovieThumb;
+
+
