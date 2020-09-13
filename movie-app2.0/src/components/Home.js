@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
 
 import {
+    API_BASE_URL,
+    API_KEY,
     IMAGE_BASE_URL,
     BACKDROP_SIZE,
-    POSTER_SIZE
+    POSTER_SIZE,
+    POPULAR_MOVIES_URL,
+    SEARCH_MOVIES_URL
 } from '../config/apiConfig';
 
 
@@ -28,27 +32,40 @@ const Home = () => {
     const [loading, setLoading] = useState(false);
     const [searchText, setSearchText] = useState("");
 
-    useEffect(() => {
-        async function getMovieData() {
-            console.log("calling fetch movies");
-            setLoading(true);
-            try {
-                const data = await fetchMovies();
-                console.log(data);
-                setState(prev => ({
-                    ...prev,
-                    movies: [...data.results],
-                    heroImage: prev.HeroImage || data.results[1],
-                    currentPage: data.page,
-                    totalPages: data.total_pages
-                }))
-            } catch (e) {
-                console.log(e)
-            }
-            setLoading(false);
-        }
-        getMovieData();
 
+    const getMovieData = async (url) => {
+        console.log("calling fetch movies");
+        const isMoreLoad = url.search('page') !== -1;
+
+        setLoading(true);
+        try {
+            const data = await fetchMovies(url);
+            console.log(data);
+            setState(prev => ({
+                ...prev,
+                movies: isMoreLoad ?
+                    [...prev.movies, ...data.results] :
+                    [...data.results],
+                heroImage: prev.heroImage || data.results[0],
+                currentPage: data.page,
+                totalPages: data.total_pages
+            }))
+        } catch (e) {
+            console.log(e)
+        }
+        setLoading(false);
+    }
+
+    const loadMoreMovies = () => {
+        console.log("clicked load more button");
+        const searchEndPoint = `${API_BASE_URL}${SEARCH_MOVIES_URL}?api_key=${API_KEY}&query=${searchText}&page=${state.currentPage + 1}`;
+        const popularEndPoint = `${API_BASE_URL}${POPULAR_MOVIES_URL}?api_key=${API_KEY}&page=${state.currentPage + 1}`;
+        const endpoint = searchText ? searchEndPoint : popularEndPoint;
+        getMovieData(endpoint);
+    }
+
+    useEffect(() => {
+        getMovieData(`${API_BASE_URL}${POPULAR_MOVIES_URL}?api_key=${API_KEY}`);
     }, []);
 
     if (!state.movies[0]) return <Spinner />;
@@ -78,7 +95,8 @@ const Home = () => {
 
                 }
             </Grid>
-            <LoadMoreButton />
+            {loading && <Spinner />}
+            <LoadMoreButton text="Load More" cbk={loadMoreMovies} />
         </>
     )
 }

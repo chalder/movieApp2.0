@@ -1,5 +1,7 @@
 import React from 'react'
 
-const LoadMoreButton = () => <h3>LoadMoreButton Here</h3>
+const LoadMoreButton = ({ text, cbk }) => (
+    <button className='load-more-btn' onClick={cbk}>{text}</button>
+)
 
 export default LoadMoreButton;

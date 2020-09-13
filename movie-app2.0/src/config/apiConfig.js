@@ -1,6 +1,9 @@
 const API_BASE_URL = "https://api.themoviedb.org/3";
 const API_KEY = "365c9e307a9b0a85d390e1b8ecf0d8b3";
 const IMAGE_BASE_URL = 'http://image.tmdb.org/t/p/';
+const POPULAR_MOVIES_URL = "/movie/popular";
+const SEARCH_MOVIES_URL = "/search/movie";
+
 
 
 //We can get all configs from config API
@@ -17,5 +20,7 @@ export {
     IMAGE_BASE_URL,
     BACKDROP_SIZE,
     POSTER_SIZE,
-    LOGO_SIZE
+    LOGO_SIZE,
+    POPULAR_MOVIES_URL,
+    SEARCH_MOVIES_URL
 };
