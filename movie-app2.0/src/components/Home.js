@@ -34,7 +34,7 @@ const Home = () => {
 
 
     const getMovieData = async (url) => {
-        console.log("calling fetch movies");
+        console.log("Chiranjib: calling fetch movies");
         const isMoreLoad = url.search('page') !== -1;
 
         setLoading(true);
@@ -57,7 +57,6 @@ const Home = () => {
     }
 
     const loadMoreMovies = () => {
-        console.log("clicked load more button");
         const searchEndPoint = `${API_BASE_URL}${SEARCH_MOVIES_URL}?api_key=${API_KEY}&query=${searchText}&page=${state.currentPage + 1}`;
         const popularEndPoint = `${API_BASE_URL}${POPULAR_MOVIES_URL}?api_key=${API_KEY}&page=${state.currentPage + 1}`;
         const endpoint = searchText ? searchEndPoint : popularEndPoint;
@@ -96,7 +95,9 @@ const Home = () => {
                 }
             </Grid>
             {loading && <Spinner />}
-            <LoadMoreButton text="Load More" cbk={loadMoreMovies} />
+            {state.currentPage < state.totalPages && !loading && (
+                <LoadMoreButton text="Load More" cbk={loadMoreMovies} />
+            )}
         </>
     )
 }
